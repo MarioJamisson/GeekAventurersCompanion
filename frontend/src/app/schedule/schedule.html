@@ -1,0 +1,51 @@
+<!-- Hero Section -->
+<section class="hero anim-fade-up">
+  <h2 class="hero-label">BLOCO 1</h2>
+  <h1 class="hero-title comic-text">SALAS</h1>
+  <h1 class="hero-title cyan-text">TEMÁTICAS</h1>
+  <p class="hero-subtitle">Descubra as aventuras que te esperam!</p>
+
+  <div class="hero-date">
+    <span class="date-badge">23/08</span>
+    <span class="date-day comic-text">DOMINGO</span>
+  </div>
+</section>
+
+<!-- Toast -->
+@if (toastMessage()) {
+  <div class="toast-notification">
+    {{ toastMessage() }}
+  </div>
+}
+
+<!-- Schedule -->
+<section class="schedule">
+  <h2 class="schedule-title title-font">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    CRONOGRAMA
+  </h2>
+
+  @for (attraction of attractions(); track attraction.id; let i = $index) {
+    <div class="card anim-fade-up" [style.animation-delay]="(i * 0.08) + 's'">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-time">
+          {{ attraction.start_time | date:'HH:mm' }} – {{ attraction.end_time | date:'HH:mm' }}
+        </div>
+        <h3 class="card-name">{{ attraction.name }}</h3>
+        <div class="card-meta">
+          <span class="card-location">📍 {{ attraction.location }}</span>
+          <span class="card-block">Bloco {{ attraction.block }}</span>
+        </div>
+        <span class="badge" [class]="getStatusClass(attraction.status)">
+          {{ getStatusLabel(attraction.status) }}
+        </span>
+      </div>
+    </div>
+  } @empty {
+    <div class="empty-state anim-fade-up">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--purple-400)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      <p>Nenhuma atração cadastrada ainda.</p>
+    </div>
+  }
+</section>

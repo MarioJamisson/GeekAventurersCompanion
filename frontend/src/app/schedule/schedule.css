@@ -1,0 +1,119 @@
+.hero {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+.hero-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--purple-400);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.hero-title {
+  font-size: 4rem;
+  line-height: 0.95;
+}
+.hero-subtitle {
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: var(--gray-200);
+  font-weight: 300;
+}
+
+.hero-date {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.date-badge {
+  display: inline-block;
+  padding: 6px 20px;
+  background: linear-gradient(135deg, var(--cyan-500), var(--cyan-400));
+  color: var(--black);
+  font-family: var(--font-title);
+  font-size: 2rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0,229,195,0.3);
+}
+.date-day {
+  font-size: 2.5rem;
+}
+
+/* =================== SCHEDULE =================== */
+.schedule {
+  margin-top: 1rem;
+}
+.schedule-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  color: var(--white);
+}
+
+/* =================== CARDS =================== */
+.card {
+  display: flex;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  border-color: rgba(0,229,195,0.2);
+}
+
+.card-accent {
+  width: 5px;
+  background: linear-gradient(180deg, var(--cyan-500), var(--purple-600));
+  flex-shrink: 0;
+}
+
+.card-body {
+  padding: 18px 22px;
+  flex: 1;
+}
+
+.card-time {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--cyan-500);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.card-name {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  color: var(--white);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.card-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: var(--purple-400);
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--purple-400);
+}
+.empty-state p {
+  margin-top: 12px;
+  font-size: 1.1rem;
+}

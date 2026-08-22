@@ -1,0 +1,155 @@
+<!-- LOGIN GATE -->
+@if (!authenticated()) {
+  <div class="login-container anim-fade-up">
+    <div class="login-card">
+      <div class="login-icon">🔒</div>
+      <h2 class="title-font login-title">ÁREA RESTRITA</h2>
+      <p class="login-desc">Digite a senha de administrador para continuar</p>
+
+      @if (loginError()) {
+        <div class="login-error">Senha incorreta. Tente novamente.</div>
+      }
+
+      <div class="login-field">
+        <input
+          type="password"
+          placeholder="Senha"
+          [value]="passwordInput()"
+          (input)="passwordInput.set($any($event.target).value)"
+          (keydown.enter)="attemptLogin()"
+        />
+      </div>
+      <button class="btn btn-cyan login-btn" (click)="attemptLogin()">ENTRAR</button>
+    </div>
+  </div>
+}
+
+<!-- ADMIN PANEL -->
+@if (authenticated()) {
+  <div class="admin anim-fade-up">
+    <!-- Header -->
+    <div class="admin-header">
+      <div>
+        <h2 class="title-font admin-title">PAINEL ADMIN</h2>
+        <p class="admin-subtitle">Gerencie atrações e avisos do evento</p>
+      </div>
+      <button class="btn btn-cyan" (click)="openForm()">
+        + Nova Atração
+      </button>
+    </div>
+
+    <!-- Modal Overlay -->
+    @if (showForm()) {
+      <div class="modal-overlay" (click)="cancelForm()">
+        <div class="modal anim-fade-up" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3 class="title-font modal-title">{{ editingId() ? '✏️ Editar Atração' : '➕ Nova Atração' }}</h3>
+            <button class="modal-close" (click)="cancelForm()">✕</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label>Nome da Atração</label>
+              <input type="text" placeholder="Ex: Torneio de Smash Bros" [value]="formData().name" (input)="updateForm('name', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Início (Horário)</label>
+              <input type="time" [value]="formData().start_time" (input)="updateForm('start_time', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Fim (Horário)</label>
+              <input type="time" [value]="formData().end_time" (input)="updateForm('end_time', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Sala / Local</label>
+              <input type="text" placeholder="Ex: Sala de Games 1" [value]="formData().location" (input)="updateForm('location', $event)" />
+            </div>
+            <div class="form-group">
+              <label>Bloco</label>
+              <input type="text" placeholder="Ex: Bloco A" [value]="formData().block" (input)="updateForm('block', $event)" />
+            </div>
+            <div class="form-group form-full">
+              <label>Status</label>
+              <select [value]="formData().status" (change)="updateForm('status', $event)">
+                <option value="scheduled">Agendado</option>
+                <option value="started">Em Andamento</option>
+                <option value="delayed">Atrasado</option>
+                <option value="finished">Encerrado</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-ghost" (click)="cancelForm()">Cancelar</button>
+            <button class="btn btn-cyan" (click)="saveAttraction()">
+              {{ editingId() ? 'Salvar Alterações' : 'Criar Atração' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Alert Modal -->
+    @if (showAlertForm()) {
+      <div class="modal-overlay" (click)="openAlertForm()">
+        <div class="modal modal-sm anim-fade-up" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3 class="title-font modal-title">📢 Novo Aviso</h3>
+            <button class="modal-close" (click)="openAlertForm()">✕</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label>Título do Aviso</label>
+              <input type="text" placeholder="Ex: Mudança de horário" [value]="alertData().title" (input)="updateAlert('title', $event)" />
+            </div>
+            <div class="form-group form-full">
+              <label>Descrição</label>
+              <textarea rows="3" placeholder="Detalhes do aviso..." [value]="alertData().description" (input)="updateAlert('description', $event)"></textarea>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-ghost" (click)="openAlertForm()">Cancelar</button>
+            <button class="btn btn-red" (click)="sendAlert()">Disparar Aviso</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Attractions Table -->
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Atração</th>
+            <th>Horário</th>
+            <th>Local</th>
+            <th>Bloco</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attr of attractions(); track attr.id) {
+            <tr>
+              <td class="cell-name">{{ attr.name }}</td>
+              <td class="cell-time">{{ attr.start_time | date:'HH:mm' }} – {{ attr.end_time | date:'HH:mm' }}</td>
+              <td>{{ attr.location }}</td>
+              <td>{{ attr.block }}</td>
+              <td><span class="badge" [class]="getStatusClass(attr.status)">{{ getStatusLabel(attr.status) }}</span></td>
+              <td><button class="btn btn-ghost btn-sm" (click)="editAttraction(attr)">Editar</button></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="empty-row">Nenhuma atração cadastrada.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FAB -->
+    <button class="fab-button" (click)="openAlertForm()" title="Novo Aviso">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 17H2"/><path d="M6 12h12"/><path d="M10 7h4"/></svg>
+    </button>
+  </div>
+}
